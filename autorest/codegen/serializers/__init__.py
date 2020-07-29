@@ -7,9 +7,7 @@
 import logging
 from pathlib import Path
 
-from .azure_functions import AzureFunctionsSerializer, Languages
 from .azure_functions.python import AzureFunctionsPythonSerializer
-from .azure_functions.csharp import AzureFunctionsCSharpSerializer
 from ..models import CodeModel
 from ...jsonrpc import AutorestAPI
 
@@ -36,28 +34,10 @@ class JinjaSerializer:
             Path(".") if code_model.options["no_namespace_folders"]
             else Path(*(code_model.namespace.split("."))))
 
-        language = code_model.options['language']
-
-        serializer: AzureFunctionsSerializer = None
-        if language == Languages.PYTHON.value:
-            _LOGGER.debug("AzureFunctionsPythonSerializer serializing now")
-            serializer = AzureFunctionsPythonSerializer(
-                    autorest_api=self._autorestapi,
-                    code_model=code_model,
-                    function_app_path=function_app_path,
-                    async_mode=False)
-            serializer.serialize()
-        elif language == Languages.CSHARP.value:
-            _LOGGER.debug("AzureFunctionsCSharpSerializer serializing now")
-            serializer = AzureFunctionsCSharpSerializer(
-                    autorest_api=self._autorestapi,
-                    code_model=code_model,
-                    function_app_path=function_app_path,
-                    async_mode=False)
-            serializer.serialize()
-        else:
-            language = code_model.options['language']
-            supported_languages = Languages.supported_list()
-            raise NotImplementedError(f"The language {language} has not been "
-                                      f"implemented yet. Current Supported "
-                                      f"list: {supported_languages}")
+        _LOGGER.debug("AzureFunctionsPythonSerializer serializing now")
+        serializer = AzureFunctionsPythonSerializer(
+                autorest_api=self._autorestapi,
+                code_model=code_model,
+                function_app_path=function_app_path,
+                async_mode=False)
+        serializer.serialize()

@@ -30,7 +30,7 @@ setup(
     license='MIT License',
     author='Microsoft Corporation',
     author_email='azpysdkhelp@microsoft.com',
-    url='https://github.com/Azure/autorest.python',
+    url='https://github.com/Azure/autorest.azure-functions-python',
     classifiers=[
         'Development Status :: 4 - Beta',
         'Programming Language :: Python',

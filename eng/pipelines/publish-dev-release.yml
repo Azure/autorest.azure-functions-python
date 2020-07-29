@@ -38,5 +38,5 @@ steps:
       export DEV_VERSION=$(node -p -e "require('./package.json').version")-dev.$BUILD_BUILDNUMBER
       npm version --no-git-tag-version $DEV_VERSION
       npm pack
-      npx publish-release --token $(azuresdk-github-pat) --repo autorest.azure-functions --owner azure --name "Autorest for Azure Functions v$DEV_VERSION" --tag v$DEV_VERSION --notes='Preview version of autorest for azure functions' --prerelease --editRelease false --assets autorest-azure-functions-$DEV_VERSION.tgz --target_commitish $(Build.SourceBranchName)
+      npx publish-release --token $(azuresdk-github-pat) --repo autorest.azure-functions-python --owner azure --name "Autorest for Azure Functions Python v$DEV_VERSION" --tag v$DEV_VERSION --notes='Preview version of autorest for azure functions python' --prerelease --editRelease false --assets autorest-azure-functions-python-$DEV_VERSION.tgz --target_commitish $(Build.SourceBranchName)
     displayName: 'Publish development release'

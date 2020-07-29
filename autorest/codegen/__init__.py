@@ -64,7 +64,7 @@ class CodeGenerator(Plugin):
         code_model.class_name = yaml_data["info"]["pascal_case_title"]
         code_model.description = (
             yaml_data["info"]["description"] if yaml_data["info"].get(
-                "description") else ""
+                    "description") else ""
         )
 
         # Global parameters
@@ -83,9 +83,9 @@ class CodeGenerator(Plugin):
             # So far now, let's get the first one in the first operation
             # UGLY as hell.....
             first_req_of_first_op_of_first_grp = \
-            yaml_data["operationGroups"][0]["operations"][0]["requests"][0]
+                yaml_data["operationGroups"][0]["operations"][0]["requests"][0]
             code_model.custom_base_url = \
-            first_req_of_first_op_of_first_grp["protocol"]["http"]["uri"]
+                first_req_of_first_op_of_first_grp["protocol"]["http"]["uri"]
         else:
             dollar_host_parameter = dollar_host[0]
             code_model.global_parameters.remove(dollar_host_parameter)
@@ -107,7 +107,7 @@ class CodeGenerator(Plugin):
 
         if yaml_data.get("schemas"):
             exceptions_set = CodeGenerator._build_exceptions_set(
-                yaml_data=yaml_data["operationGroups"])
+                    yaml_data=yaml_data["operationGroups"])
 
             for type_list in yaml_data["schemas"].values():
                 for schema in type_list:
@@ -142,13 +142,14 @@ class CodeGenerator(Plugin):
         )
 
         credential_scopes_temp = self._autorestapi.get_value(
-            "credential-scopes")
+                "credential-scopes")
         credential_scopes = credential_scopes_temp.split(
-            ",") if credential_scopes_temp else None
+                ",") if credential_scopes_temp else None
         if credential_scopes and not credential:
             raise ValueError(
-                "--credential-scopes must be used with the --add-credential "
-                "flag")
+                    "--credential-scopes must be used with the "
+                    "--add-credential "
+                    "flag")
 
         # check to see if user just passes in --credential-scopes with no value
         if self._autorestapi.get_boolean_value("credential-scopes",
@@ -179,13 +180,6 @@ class CodeGenerator(Plugin):
                 )
                 credential_scopes = []
 
-        # check to see if user passes --languages with no value
-        language = self._autorestapi.get_value("language")
-        if not language:
-            raise ValueError(
-                "--language must be used to generate language-specific azure "
-                "functions scaffolding")
-
         license_header = self._autorestapi.get_value("header-text")
         if license_header:
             license_header = license_header.replace("\n", "\n# ")
@@ -201,27 +195,28 @@ class CodeGenerator(Plugin):
             "credential": credential,
             "credential_scopes": credential_scopes,
             "head_as_boolean": self._autorestapi.get_boolean_value(
-                "head-as-boolean", False),
+                    "head-as-boolean", False),
             "license_header": license_header,
             "keep_version_file": self._autorestapi.get_boolean_value(
-                "keep-version-file", False),
+                    "keep-version-file", False),
             "no_async": self._autorestapi.get_boolean_value("no-async", False),
             "no_namespace_folders": self._autorestapi.get_boolean_value(
-                "no-namespace-folders", False),
+                    "no-namespace-folders", False),
             "basic_setup_py": self._autorestapi.get_boolean_value(
-                "basic-setup-py", False),
+                    "basic-setup-py", False),
             "package_name": self._autorestapi.get_value("package-name"),
             "package_version": self._autorestapi.get_value("package-version"),
             "client_side_validation": self._autorestapi.get_boolean_value(
-                "client-side-validation", False),
+                    "client-side-validation", False),
             "tracing": self._autorestapi.get_boolean_value("trace", False),
             "multiapi": self._autorestapi.get_boolean_value("multiapi", False),
-            "language": language
+            "generate_metadata": self._autorestapi.get_boolean_value(
+                    "generate-metadata", True)
         }
 
         if options["basic_setup_py"] and not options["package_version"]:
             raise ValueError(
-                "--basic-setup-py must be used with --package-version")
+                    "--basic-setup-py must be used with --package-version")
 
         # Force some options in ARM MODE:
         if azure_arm:
@@ -235,7 +230,7 @@ class CodeGenerator(Plugin):
         _LOGGER.debug("Possible Inputs: %s", inputs)
         if "code-model-v4-no-tags.yaml" not in inputs:
             raise ValueError(
-                "code-model-v4-no-tags.yaml must be a possible input")
+                    "code-model-v4-no-tags.yaml must be a possible input")
 
         file_content = self._autorestapi.read_file("code-model-v4-no-tags.yaml")
 
@@ -260,7 +255,7 @@ def main(yaml_model_file: str) -> None:
         LocalAutorestAPI  # pylint: disable=import-outside-toplevel
 
     code_generator = CodeGenerator(
-        autorestapi=LocalAutorestAPI(reachable_files=[yaml_model_file]))
+            autorestapi=LocalAutorestAPI(reachable_files=[yaml_model_file]))
     if not code_generator.process():
         raise SystemExit("Process didn't finish gracefully")
 

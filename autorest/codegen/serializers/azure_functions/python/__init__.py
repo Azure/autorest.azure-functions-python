@@ -59,10 +59,11 @@ class AzureFunctionsPythonSerializer(AzureFunctionsSerializer):
                 env=self.azure_functions_templates_env,
                 function_app_path=self.function_app_path)
 
-        _LOGGER.debug("Generating Function App contents")
-        self._serialize_and_write_function_app_contents(
-                env=self.azure_functions_templates_env,
-                function_app_path=self.function_app_path)
+        if self.code_model.options["generate_metadata"]:
+            _LOGGER.debug("Generating Function App contents")
+            self._serialize_and_write_function_app_contents(
+                    env=self.azure_functions_templates_env,
+                    function_app_path=self.function_app_path)
 
         # Writes the model folder
         _LOGGER.debug("Generating python model folders")

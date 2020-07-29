@@ -15,9 +15,6 @@ class NameConverter:
         yaml_data["info"]["python_title"] = NameConverter._to_valid_python_name(
             name=yaml_data["info"]["title"].replace(" ", ""), convert_name=True
         )
-        yaml_data["info"]["python_title"] = NameConverter._to_valid_python_name(
-            name=yaml_data["info"]["title"].replace(" ", ""), convert_name=True
-        )
         yaml_data['info']['pascal_case_title'] = yaml_data["language"]["default"]["name"]
         if yaml_data['info'].get("description"):
             if yaml_data["info"]["description"][-1] != ".":
@@ -71,15 +68,12 @@ class NameConverter:
             for schema in schema_yamls:
                 if type_list == "objects":
                     continue
+                NameConverter._convert_language_default_python_case(schema)
                 if type_list in ["arrays", "dictionaries"]:
-                    NameConverter._convert_language_default_python_case(schema)
                     NameConverter._convert_language_default_python_case(schema["elementType"])
                 elif type_list == "constants":
-                    NameConverter._convert_language_default_python_case(schema)
                     NameConverter._convert_language_default_python_case(schema["value"])
                     NameConverter._convert_language_default_python_case(schema["valueType"])
-                else:
-                    NameConverter._convert_language_default_python_case(schema)
 
     @staticmethod
     def _convert_enum_schema(schema: Dict[str, Any]) -> None:
@@ -184,8 +178,7 @@ class NameConverter:
                 return prefix + match_str[: len(match_str) - 1] + "_" + match_str[len(match_str) - 1]
 
             return prefix + match_str
-        # return re.sub("[A-Z]+", replace_upper_characters, name)
-        return name
+        return re.sub("[A-Z]+", replace_upper_characters, name)
 
     @staticmethod
     def _get_escaped_reserved_name(name: str, pad_string: Optional[PadType] = None) -> str:
