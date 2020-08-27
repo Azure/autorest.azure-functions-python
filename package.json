@@ -25,7 +25,7 @@
   },
   "homepage": "https://github.com/Azure/autorest.python/blob/autorestv3/README.md",
   "dependencies": {
-    "@azure-tools/extension": "^3.0.259"
+    "@azure-tools/extension": "^3.0.262"
   },
   "devDependencies": {
     "@autorest/autorest": "^3.0.0",

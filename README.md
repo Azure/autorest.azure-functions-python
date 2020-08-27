@@ -1,34 +1,77 @@
-# project-stencil
-
-See [here](https://github.com/Azure/autorest.python/wiki/Generating-with-autorest-for-python-v5.0.0)
-
+# OpenAPI Code Generator for Azure Functions
+## (part of project-stencil)
 
 ### Autorest plugin configuration
-- Please don't edit this section unless you're re-configuring how the powershell extension plugs in to AutoRest
-AutoRest needs the below config to pick this up as a plug-in - see https://github.com/Azure/autorest/blob/master/docs/developer/architecture/AutoRest-extension.md
+- Please don't edit this section unless you're re-configuring how the azure-functions-python extension plugs in to AutoRest
+AutoRest needs the below config to pick this up as a plug-in - see [AutoRest-extension.md](https://github.com/Azure/autorest/blob/master/docs/developer/architecture/AutoRest-extension.md) for more information.
 
 #### Azure Functions Python code generation configuration
 
-```yaml $(language) == "python"
-require: $(this-folder)/config/python/readme.md
-```
+```yaml
+pass-thru:
+  - model-deduplicator
+  - subset-reducer
 
-#### Azure Functions C# code generation configuration
+use-extension:
+  "@autorest/modelerfour": "4.15.414"
 
-```yaml $(language) == "csharp"
-require: $(this-folder)/config/csharp/readme.md
-```
+modelerfour:
+  group-parameters: true
+  flatten-models: true
+  flatten-payloads: true
+  resolve-schema-name-collisons: true
+  always-create-content-type-parameter: true
+  multiple-request-parameter-flattening: false
+  naming:
+    parameter: snakecase
+    property: snakecase
+    operation: snakecase
+    operationGroup:  pascalcase
+    choice:  pascalcase
+    choiceValue:  snakecase
+    constant:  snakecase
+    constantParameter:  snakecase
+    type:  pascalcase
+    local: _ + snakecase
+    global: snakecase
+    preserve-uppercase-max-length: 6
+    override:
+      $host: $host
+      base64: base64
+      IncludeAPIs: include_apis
 
-#### Azure Functions Java code generation configuration
+pipeline:
+  python:
+    # doesn't process anything, just makes it so that the 'python:' config section loads early, 
+    # for the modelerfour plugin to get the input
+    pass-thru: true
+    input: openapi-document/multi-api/identity
 
-```yaml $(language) == "java"
-require: $(this-folder)/config/java/readme.md
-```
+  modelerfour:
+    # in order that the modelerfour/flattener/grouper/etc picks up
+    # configuration nested under python: in the user's config,
+    # we have to make modeler four pull from the 'python' task.
+    input: python
 
-#### Azure Functions JavaScript code generation configuration
+  python/m2r:
+    input: modelerfour/identity
 
-```yaml $(language) == "javascript"
-require: $(this-folder)/config/javascript/readme.md
+  python/namer:
+    input: python/m2r
+
+  python/codegen:
+    input: python/namer
+    output-artifact: python-files
+
+  python/codegen/emitter:
+    input: codegen
+    scope: scope-codegen/emitter
+
+scope-codegen/emitter:
+    input-artifact: python-files
+    output-uri-expr: $key
+
+output-artifact: python-files
 ```
 
 ## Contributing
