@@ -17,7 +17,7 @@ _LOGGER = logging.getLogger(__name__)
 
 @dispatcher.add_method
 def GetPluginNames():
-    return ["codegen", "m2r", "namer", "namercsharp", "multiapiscript"]
+    return ["codegen", "m2r", "namer"]
 
 
 @dispatcher.add_method
@@ -34,12 +34,8 @@ def Process(plugin_name: str, session_id: str) -> bool:
             from ..m2r import M2R as PluginToLoad
         elif plugin_name == "namer":
             from ..namer import Namer as PluginToLoad  # type: ignore
-        elif plugin_name == "namercsharp":
-            from ..namer.csharp import Namer as PluginToLoad  # type: ignore
         elif plugin_name == "codegen":
             from ..codegen import CodeGenerator as PluginToLoad  # type: ignore
-        elif plugin_name == "multiapiscript":
-            from ..multiapi import MultiApiScriptPlugin as PluginToLoad  # type: ignore
         else:
             _LOGGER.fatal("Unknown plugin name %s", plugin_name)
             raise RuntimeError(f"Unknown plugin name {plugin_name}")

@@ -13,7 +13,6 @@ class ImportType(str, Enum):
     AZURECORE = "azurecore"
     LOCAL = "local"
 
-
 class TypingSection(str, Enum):
     REGULAR = "regular"  # this import is always a typing import
     CONDITIONAL = "conditional"  # is a typing import when we're dealing with files that py2 will use, else regular

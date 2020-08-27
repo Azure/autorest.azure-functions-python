@@ -5,7 +5,8 @@
 # --------------------------------------------------------------------------
 from typing import Any, Dict
 from .base_model import BaseModel
-from .code_model import CodeModel, CredentialSchema
+from .code_model import CodeModel
+from .credential_schema import AzureKeyCredentialSchema, TokenCredentialSchema
 from .object_schema import ObjectSchema
 from .dictionary_schema import DictionarySchema
 from .list_schema import ListSchema
@@ -13,6 +14,7 @@ from .primitive_schemas import get_primitive_schema, AnySchema, PrimitiveSchema
 from .enum_schema import EnumSchema
 from .base_schema import BaseSchema
 from .constant_schema import ConstantSchema
+from .credential_schema import CredentialSchema
 from .imports import FileImport, ImportType, TypingSection
 from .lro_operation import LROOperation
 from .paging_operation import PagingOperation
@@ -25,11 +27,12 @@ from .parameter_list import ParameterList
 
 
 __all__ = [
+    "AzureKeyCredentialSchema",
     "BaseModel",
     "BaseSchema",
     "CodeModel",
-    "CredentialSchema",
     "ConstantSchema",
+    "CredentialSchema",
     "ObjectSchema",
     "DictionarySchema",
     "ListSchema",
@@ -45,7 +48,8 @@ __all__ = [
     "ParameterList",
     "OperationGroup",
     "Property",
-    "SchemaResponse"
+    "SchemaResponse",
+    "TokenCredentialSchema",
 ]
 
 def _generate_as_object_schema(yaml_data: Dict[str, Any]) -> bool:

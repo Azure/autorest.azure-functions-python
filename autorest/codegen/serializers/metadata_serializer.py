@@ -5,25 +5,22 @@
 # --------------------------------------------------------------------------
 import copy
 import json
-from typing import List, Optional, Set, Tuple, Dict
+from typing import Dict, List, Optional, Set, Tuple
+
 from jinja2 import Environment
-from ..models import (
-    CodeModel,
-    Operation,
-    OperationGroup,
-    LROOperation,
-    PagingOperation,
-    CredentialSchema,
-    ParameterList,
-    TypingSection,
-    ImportType
-)
+
+from ..models import (CodeModel, ImportType, LROOperation, Operation,
+                      OperationGroup, PagingOperation, ParameterList,
+                      TokenCredentialSchema, TypingSection)
+
 
 def _correct_credential_parameter(global_parameters: ParameterList, async_mode: bool) -> None:
     credential_param = [
-        gp for gp in global_parameters.parameters if isinstance(gp.schema, CredentialSchema)
+        gp for gp in global_parameters.parameters if
+        isinstance(gp.schema, TokenCredentialSchema)
     ][0]
-    credential_param.schema = CredentialSchema(async_mode=async_mode)
+    credential_param.schema = TokenCredentialSchema(async_mode=async_mode)
+
 
 def _json_serialize_imports(
     imports: Dict[TypingSection, Dict[ImportType, Dict[str, Set[Optional[str]]]]]
@@ -32,9 +29,9 @@ def _json_serialize_imports(
         return None
 
     json_serialize_imports = {}
-    # need to make name_import set -> list to make the dictionary json serializable
-    # not using an OrderedDict since we're iterating through a set and the order there varies
-    # going to sort the list instead
+    # need to make name_import () -> [] to make the dictionary json serializable
+    # not using an OrderedDict since we're iterating through a set and the order
+    # there varies going to sort the list instead
 
     for typing_section_key, typing_section_value in imports.items():
         json_import_type_dictionary = {}
@@ -107,11 +104,19 @@ class MetadataSerializer:
         # In this case, we need two copies of the credential global parameter
         # for typing purposes.
         async_global_parameters = self.code_model.global_parameters
-        if self.code_model.options['credential']:
-            # this ensures that the CredentialSchema showing up in the list of code model's global parameters
-            # is sync. This way we only have to make a copy for an async_credential
-            _correct_credential_parameter(self.code_model.global_parameters, False)
-            async_global_parameters = self._make_async_copy_of_global_parameters()
+        if (
+                self.code_model.options['credential'] and
+                self.code_model.options[
+                    'credential_default_policy_type'] ==
+                "BearerTokenCredentialPolicy"
+        ):
+            # this ensures that the TokenCredentialSchema showing up in the
+            # list of code model's global parameters is sync.
+            # This way we only have to make a copy for an async_credential
+            _correct_credential_parameter(self.code_model.global_parameters,
+                                          False)
+            async_global_parameters = \
+                self._make_async_copy_of_global_parameters()
 
         template = self.env.get_template("metadata.json.jinja2")
         return template.render(

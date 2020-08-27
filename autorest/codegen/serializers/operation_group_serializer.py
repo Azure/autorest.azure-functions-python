@@ -5,13 +5,14 @@
 # --------------------------------------------------------------------------
 from jinja2 import Environment
 
-from autorest.codegen.serializers.azure_functions.python.import_serializer import FileImportSerializer
-from ..models import LROOperation, PagingOperation, CodeModel, OperationGroup
+from .azure_functions.python.import_serializer import FileImportSerializer
+from ..models import CodeModel, LROOperation, OperationGroup, PagingOperation
 
 
 class OperationGroupSerializer:
     def __init__(
-        self, code_model: CodeModel, env: Environment, operation_group: OperationGroup, async_mode: bool
+            self, code_model: CodeModel, env: Environment,
+            operation_group: OperationGroup, async_mode: bool
     ) -> None:
         self.code_model = code_model
         self.env = env
@@ -25,18 +26,25 @@ class OperationGroupSerializer:
         def _is_paging(operation):
             return isinstance(operation, PagingOperation)
 
-        operation_group_template = self.env.get_template("operations_container.py.jinja2")
+        operation_group_template = self.env.get_template(
+            "operations_container.py.jinja2")
         if self.operation_group.is_empty_operation_group:
-            operation_group_template = self.env.get_template("operations_container_mixin.py.jinja2")
+            operation_group_template = self.env.get_template(
+                "operations_container_mixin.py.jinja2")
 
         return operation_group_template.render(
-            code_model=self.code_model,
-            operation_group=self.operation_group,
-            imports=FileImportSerializer(
-                self.operation_group.imports(self.async_mode, bool(self.code_model.schemas)),
-                is_python_3_file=self.async_mode
-            ),
-            async_mode=self.async_mode,
-            is_lro=_is_lro,
-            is_paging=_is_paging,
+                code_model=self.code_model,
+                operation_group=self.operation_group,
+                imports=FileImportSerializer(
+                        self.operation_group.imports(
+                                self.async_mode,
+                                bool(
+                                        self.code_model.schemas or
+                                        self.code_model.enums)
+                        ),
+                        is_python_3_file=self.async_mode
+                ),
+                async_mode=self.async_mode,
+                is_lro=_is_lro,
+                is_paging=_is_paging,
         )

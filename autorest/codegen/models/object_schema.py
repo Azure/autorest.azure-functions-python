@@ -125,25 +125,26 @@ class ObjectSchema(BaseSchema):  # pylint: disable=too-many-instance-attributes
         # checking to see if this is a polymorphic class
         subtype_map = None
         if yaml_data.get("discriminator"):
-            subtype_map = {
-                children_yaml["discriminatorValue"]: children_yaml["language"][
-                    "python"
-                ]["name"]
-                for children_yaml in yaml_data["discriminator"][
-                    "immediate"
-                ].values()
-            }
+            subtype_map = {}
+            # map of discriminator value to child's name
+            for children_yaml in yaml_data["discriminator"]["immediate"].values():
+                subtype_map[children_yaml["discriminatorValue"]] = children_yaml["language"]["python"]["name"]
 
         if yaml_data.get("properties"):
             properties += [
                 Property.from_yaml(p, has_additional_properties=len(properties) > 0, **kwargs)
                 for p in yaml_data["properties"]
             ]
+        # this is to ensure that the attribute map type and property type are generated correctly
+
+
+
         description = yaml_data["language"]["python"]["description"]
         is_exception = False
         exceptions_set = kwargs.pop("exceptions_set", None)
-        if exceptions_set and id(yaml_data) in exceptions_set:
-            is_exception = True
+        if exceptions_set:
+            if id(yaml_data) in exceptions_set:
+                is_exception = True
 
         self.yaml_data = yaml_data
         self.name = name

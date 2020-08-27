@@ -8,7 +8,6 @@ __pycache__/
 
 # Distribution / packaging
 .Python
-env/
 build/
 develop-eggs/
 dist/
@@ -27,6 +26,7 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+package-lock.json
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -111,6 +111,7 @@ ENV/
 env.bak/
 venv.bak/
 py3env/
+env/
 
 # Spyder project settings
 .spyderproject
@@ -156,3 +157,10 @@ autorest-azure-functions*gz
 
 # NPMrc files
 .npmrc
+
+# autorest default folder
+generated
+**/code-model-v4-no-tags.yaml
+
+# Generated test folders
+test/services/*/_generated

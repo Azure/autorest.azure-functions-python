@@ -24,6 +24,7 @@ class LROOperation(Operation):
         description: str,
         url: str,
         method: str,
+        multipart: bool,
         api_versions: Set[str],
         requests: List[SchemaRequest],
         summary: Optional[str] = None,
@@ -32,7 +33,7 @@ class LROOperation(Operation):
         responses: Optional[List[SchemaResponse]] = None,
         exceptions: Optional[List[SchemaResponse]] = None,
         want_description_docstring: bool = True,
-        want_tracing: bool = True,
+        want_tracing: bool = True
     ) -> None:
         super(LROOperation, self).__init__(
             yaml_data,
@@ -40,6 +41,7 @@ class LROOperation(Operation):
             description,
             url,
             method,
+            multipart,
             api_versions,
             requests,
             summary,
@@ -65,10 +67,11 @@ class LROOperation(Operation):
                 rt for rt in response_types if 200 in rt.status_codes
             ]
             if not response_types_with_200_status_code:
-                raise ValueError("Your swagger is invalid because you have "
-                                 "multiple response schemas for LRO method "
-                                 f"{self.python_name} and none of them have a "
-                                 "200 status code.")
+                raise ValueError(
+                    "Your swagger is invalid because you have multiple response"
+                    " schemas for LRO" + f" method {self.python_name} and "
+                    "none of them have a 200 status code."
+                )
             response_type = response_types_with_200_status_code[0]
 
             response_type_schema_name = cast(BaseSchema, response_type.schema).serialization_type
