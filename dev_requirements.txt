@@ -2,7 +2,7 @@
 tox
 invoke
 colorama
-pylint==2.5.3
+pylint
 pytest
 ptvsd
 mypy

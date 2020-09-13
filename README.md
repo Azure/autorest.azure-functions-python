@@ -1,4 +1,4 @@
-# OpenAPI Code Generator for Azure Functions
+# OpenAPI Code Generator for Azure Functions (Python)
 ## (part of project-stencil)
 
 ### Autorest plugin configuration

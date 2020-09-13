@@ -1,6 +1,6 @@
 {
   "name": "@autorest/azure-functions-python",
-  "version": "0.0.1-preview",
+  "version": "0.1.0-preview",
   "description": "The Azure Functions extension for code generators in AutoRest.",
   "scripts": {
     "prepare": "node run-python3.js prepare.py",

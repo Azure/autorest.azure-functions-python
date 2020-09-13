@@ -39,7 +39,8 @@ def _get_import_clauses(imports: Dict[ImportType, Dict[str, Set[Optional[str]]]]
 
 
 class FileImportSerializer:
-    def __init__(self, file_import: FileImport, is_python_3_file: bool) -> None:
+    def __init__(self, file_import: FileImport,
+                 is_python_3_file: bool = True) -> None:
         self._file_import = file_import
         self.is_python_3_file = is_python_3_file
 

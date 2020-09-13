@@ -1,0 +1,741 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a sample Consoto server specification.",
+        "version": "1.0.0",
+        "title": "Contoso HR",
+        "termsOfService": "http://find.terms.of.service.here/",
+        "contact": {
+            "email": "apiteam@contoso.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        }
+    },
+    "host": "contoso.com",
+    "basePath": "/hr/api/v1.0.0",
+    "tags": [
+        {
+            "name": "Employee",
+            "description": "Operations about employees",
+            "externalDocs": {
+                "description": "Find out more",
+                "url": "http://contoso.com"
+            }
+        },
+        {
+            "name": "Organization",
+            "description": "Operations about organization"
+        },
+        {
+            "name": "Role",
+            "description": "Operations about roles",
+            "externalDocs": {
+                "description": "Find out more about our Company",
+                "url": "http://contoso.com"
+            }
+        }
+    ],
+    "schemes": [
+        "https"
+    ],
+    "paths": {
+        "/employee": {
+            "post": {
+                "tags": [
+                    "Employee"
+                ],
+                "summary": "Add a new employee to database",
+                "operationId": "addEmployee",
+                "consumes": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Employee object that needs to be added to the Company",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Employee"
+                        }
+                    }
+                ],
+                "responses": {
+                    "405": {
+                        "description": "Invalid input"
+                    }
+                },
+                "security": [
+                    {
+                        "EmployeeCompany_auth": [
+                            "write:employees",
+                            "read:employees"
+                        ]
+                    }
+                ]
+            },
+            "get": {
+                "tags": [
+                    "Employee"
+                ],
+                "summary": "Returns all Employees",
+                "description": "Returns an array of employee",
+                "operationId": "getEmployees",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Here's the list of employees",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Employee"
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            }
+        },
+        "/employee/findByRole": {
+            "get": {
+                "tags": [
+                    "Employee"
+                ],
+                "summary": "Finds Employees by role",
+                "description": "Multiple role values can be provided with comma separated strings",
+                "operationId": "findEmployeesByRole",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "name": "role",
+                        "in": "query",
+                        "description": "Role values that need to be considered for filter",
+                        "required": true,
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "default": "Software Engineer"
+                        },
+                        "collectionFormat": "multi"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Employee"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid status value"
+                    }
+                },
+                "security": [
+                    {
+                        "EmployeeCompany_auth": [
+                            "write:employees",
+                            "read:employees"
+                        ]
+                    }
+                ]
+            }
+        },
+        "/employee/{employeeId}": {
+            "get": {
+                "tags": [
+                    "Employee"
+                ],
+                "summary": "Find Employee by ID",
+                "description": "Returns a single Employee",
+                "operationId": "getEmployeeById",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "name": "employeeId",
+                        "in": "path",
+                        "description": "ID of Employee to return",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/Employee"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid ID supplied"
+                    },
+                    "404": {
+                        "description": "Employee not found"
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Employee"
+                ],
+                "summary": "Updates a Employee in the Company with form data",
+                "operationId": "updateEmployeeWithForm",
+                "consumes": [
+                    "application/x-www-form-urlencoded"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "name": "employeeId",
+                        "in": "path",
+                        "description": "ID of Employee that needs to be updated",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    {
+                        "name": "name",
+                        "in": "formData",
+                        "description": "Updated name of the Employee",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "role",
+                        "in": "formData",
+                        "description": "Updated role of the Employee",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "405": {
+                        "description": "Invalid input"
+                    }
+                },
+                "security": [
+                    {
+                        "EmployeeCompany_auth": [
+                            "write:employees",
+                            "read:employees"
+                        ]
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Employee"
+                ],
+                "summary": "Deletes a Employee",
+                "operationId": "deleteEmployee",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "name": "api_key",
+                        "in": "header",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "employeeId",
+                        "in": "path",
+                        "description": "Employee id to delete",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid ID supplied"
+                    },
+                    "404": {
+                        "description": "Employee not found"
+                    }
+                },
+                "security": [
+                    {
+                        "EmployeeCompany_auth": [
+                            "write:employees",
+                            "read:employees"
+                        ]
+                    }
+                ]
+            }
+        },
+        "/employee/{employeeId}/uploadImage": {
+            "put": {
+                "tags": [
+                    "Employee"
+                ],
+                "summary": "uploads an image",
+                "operationId": "uploadFile",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "employeeId",
+                        "in": "path",
+                        "description": "ID of Employee to update",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    {
+                        "name": "additionalMetadata",
+                        "in": "formData",
+                        "description": "Additional data to pass to server",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "name": "file",
+                        "in": "formData",
+                        "description": "file to upload",
+                        "required": false,
+                        "type": "file"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ApiResponse"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "EmployeeCompany_auth": [
+                            "write:employees",
+                            "read:employees"
+                        ]
+                    }
+                ]
+            }
+        },
+        "/organization": {
+            "get": {
+                "tags": [
+                    "Organization"
+                ],
+                "summary": "Returns all Organization details",
+                "description": "Returns an array of organization",
+                "operationId": "getOrganizations",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Here's the list of organization",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Organization"
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Organization"
+                ],
+                "summary": "Add a new Organization to database",
+                "operationId": "addOrganization",
+                "consumes": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Organization object that needs to be added to the Company",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Organization"
+                        }
+                    }
+                ],
+                "responses": {
+                    "405": {
+                        "description": "Invalid input"
+                    }
+                },
+                "security": [
+                    {
+                        "EmployeeCompany_auth": [
+                            "write:employees",
+                            "read:employees"
+                        ]
+                    }
+                ]
+            }
+        },
+        "/organization/{organizationId}": {
+            "get": {
+                "tags": [
+                    "Organization"
+                ],
+                "summary": "Returns a specfic Organization's details",
+                "description": "Returns an organization",
+                "operationId": "getOrganization",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "organizationId",
+                        "in": "path",
+                        "description": "ID of organization to return",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Here are the details of the organization",
+                        "schema": {
+                            "$ref": "#/definitions/Organization"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "api_key": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Organization"
+                ],
+                "summary": "Update details of an organization",
+                "operationId": "updateOrganization",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "name": "organizationId",
+                        "in": "path",
+                        "description": "ID of organization to return",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/Organization"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid Organization operation"
+                    }
+                }
+            }
+        },
+        "/role": {
+            "post": {
+                "tags": [
+                    "Role"
+                ],
+                "summary": "Create Role",
+                "description": "Create a new role.",
+                "operationId": "createRole",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Created role object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Role"
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "successful operation"
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Role"
+                ],
+                "summary": "Get all Roles",
+                "description": "Get all roles.",
+                "operationId": "getRoles",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Here's the list of all roles",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Role"
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        },
+        "/role/{roleId}": {
+            "put": {
+                "tags": [
+                    "Role"
+                ],
+                "summary": "update Role Information",
+                "operationId": "updateRole",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "name": "roleId",
+                        "in": "path",
+                        "description": "ID of Role to update",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Update of role object",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Role"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "successful operation"
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Role"
+                ],
+                "summary": "update Role Information",
+                "operationId": "getRole",
+                "produces": [
+                    "application/json",
+                    "application/xml"
+                ],
+                "parameters": [
+                    {
+                        "name": "roleId",
+                        "in": "path",
+                        "description": "ID of Role to return",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                ],
+                "responses": {
+                    "default": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "contosohr_auth": {
+            "type": "oauth2",
+            "authorizationUrl": "http://contoso.com/oauth/dialog",
+            "flow": "implicit",
+            "scopes": {
+                "write:employees": "modify employee records in your account",
+                "read:employees": "read employee records"
+            }
+        },
+        "api_key": {
+            "type": "apiKey",
+            "name": "api_key",
+            "in": "header"
+        }
+    },
+    "definitions": {
+        "Organization": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "Name": {
+                    "type": "string",
+                    "example": "Cloud and AI"
+                },
+                "active": {
+                    "type": "boolean",
+                    "default": true
+                }
+            },
+            "xml": {
+                "name": "Organization"
+            }
+        },
+        "Role": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "Name": {
+                    "type": "string",
+                    "example": "Software Engineer"
+                },
+                "active": {
+                    "type": "boolean",
+                    "default": true
+                }
+            },
+            "xml": {
+                "name": "Role"
+            }
+        },
+        "Employee": {
+            "type": "object",
+            "required": [
+                "name",
+                "role"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "John Doe"
+                },
+                "role": {
+                    "$ref": "#/definitions/Role"
+                },
+                "organization": {
+                    "$ref": "#/definitions/Organization"
+                },
+                "date-of-birth": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "date-of-joining": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "active": {
+                    "type": "boolean",
+                    "default": true
+                },
+                "photoUrls": {
+                    "type": "array",
+                    "xml": {
+                        "name": "photoUrl",
+                        "wrapped": true
+                    },
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            },
+            "xml": {
+                "name": "Employee"
+            }
+        },
+        "ApiResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "type": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "externalDocs": {
+        "description": "Find out more about Contoso",
+        "url": "http://contoso.com"
+    }
+}

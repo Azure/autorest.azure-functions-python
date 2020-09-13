@@ -1,0 +1,516 @@
+{
+	"swagger": "2.0",
+	"info": {
+		"title": "COVIDScreeningApi",
+		"version": "1.0"
+	},
+	"schemes": [
+		"https"
+	],
+	"securityDefinitions": {
+		"apiKeyHeader": {
+			"type": "apiKey",
+			"name": "Ocp-Apim-Subscription-Key",
+			"in": "header"
+		},
+		"apiKeyQuery": {
+			"type": "apiKey",
+			"name": "subscription-key",
+			"in": "query"
+		}
+	},
+	"security": [
+		{
+			"apiKeyHeader": []
+		},
+		{
+			"apiKeyQuery": []
+		}
+	],
+	"paths": {
+		"/PortsOfEntry": {
+			"get": {
+				"operationId": "get-portsofentry",
+				"summary": "/PortsOfEntry - GET",
+				"tags": [
+					"PortsOfEntry"
+				],
+				"produces": [
+					"text/plain",
+					"application/json",
+					"text/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Success",
+						"schema": {
+							"$ref": "#/definitions/PortsOfEntryArray"
+						}
+					}
+				}
+			},
+			"post": {
+				"operationId": "post-portsofentry",
+				"summary": "/PortsOfEntry - POST",
+				"tags": [
+					"PortsOfEntry"
+				],
+				"parameters": [
+					{
+						"name": "portsOfEntry",
+						"in": "body",
+						"schema": {
+							"$ref": "#/definitions/PortsOfEntry"
+						}
+					}
+				],
+				"consumes": [
+					"application/json",
+					"text/json",
+					"application/*+json"
+				],
+				"produces": [
+					"text/plain",
+					"application/json",
+					"text/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Success",
+						"schema": {
+							"$ref": "#/definitions/PortsOfEntry"
+						}
+					}
+				}
+			}
+		},
+		"/PortsOfEntry/{id}": {
+			"get": {
+				"operationId": "get-portsofentry-id",
+				"summary": "/PortsOfEntry/{id} - GET",
+				"tags": [
+					"PortsOfEntry"
+				],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "Format - uuid.",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"produces": [
+					"text/plain",
+					"application/json",
+					"text/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Success",
+						"schema": {
+							"$ref": "#/definitions/PortsOfEntry"
+						}
+					}
+				}
+			},
+			"put": {
+				"operationId": "put-portsofentry-id",
+				"summary": "/PortsOfEntry/{id} - PUT",
+				"tags": [
+					"PortsOfEntry"
+				],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "Format - uuid.",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "portsOfEntry",
+						"in": "body",
+						"schema": {
+							"$ref": "#/definitions/PortsOfEntry"
+						}
+					}
+				],
+				"consumes": [
+					"application/json",
+					"text/json",
+					"application/*+json"
+				],
+				"responses": {
+					"200": {
+						"description": "Success"
+					}
+				}
+			}
+		},
+		"/RepresentativeData": {
+			"get": {
+				"operationId": "get-representativedata",
+				"summary": "/RepresentativeData - GET",
+				"tags": [
+					"RepresentativeData"
+				],
+				"produces": [
+					"text/plain",
+					"application/json",
+					"text/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Success",
+						"schema": {
+							"$ref": "#/definitions/RepresentativeDataArray"
+						}
+					}
+				}
+			},
+			"post": {
+				"operationId": "post-representativedata",
+				"summary": "/RepresentativeData - POST",
+				"tags": [
+					"RepresentativeData"
+				],
+				"parameters": [
+					{
+						"name": "representativeData",
+						"in": "body",
+						"schema": {
+							"$ref": "#/definitions/RepresentativeData"
+						}
+					}
+				],
+				"consumes": [
+					"application/json",
+					"text/json",
+					"application/*+json"
+				],
+				"produces": [
+					"text/plain",
+					"application/json",
+					"text/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Success",
+						"schema": {
+							"$ref": "#/definitions/RepresentativeData"
+						}
+					}
+				}
+			}
+		},
+		"/RepresentativeData/{id}": {
+			"get": {
+				"operationId": "get-representativedata-id",
+				"summary": "/RepresentativeData/{id} - GET",
+				"tags": [
+					"RepresentativeData"
+				],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "Format - uuid.",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"produces": [
+					"text/plain",
+					"application/json",
+					"text/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Success",
+						"schema": {
+							"$ref": "#/definitions/RepresentativeData"
+						}
+					}
+				}
+			},
+			"put": {
+				"operationId": "put-representativedata-id",
+				"summary": "/RepresentativeData/{id} - PUT",
+				"tags": [
+					"RepresentativeData"
+				],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "Format - uuid.",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "representativeData",
+						"in": "body",
+						"schema": {
+							"$ref": "#/definitions/RepresentativeData"
+						}
+					}
+				],
+				"consumes": [
+					"application/json",
+					"text/json",
+					"application/*+json"
+				],
+				"responses": {
+					"200": {
+						"description": "Success"
+					}
+				}
+			}
+		},
+		"/ScreeningDataTable": {
+			"get": {
+				"operationId": "get-screeningdatatable",
+				"summary": "/ScreeningDataTable - GET",
+				"tags": [
+					"ScreeningDataTable"
+				],
+				"produces": [
+					"text/plain",
+					"application/json",
+					"text/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Success",
+						"schema": {
+							"$ref": "#/definitions/ScreeningDataTableArray"
+						}
+					}
+				}
+			},
+			"post": {
+				"operationId": "post-screeningdatatable",
+				"summary": "/ScreeningDataTable - POST",
+				"tags": [
+					"ScreeningDataTable"
+				],
+				"parameters": [
+					{
+						"name": "screeningDataTable",
+						"in": "body",
+						"schema": {
+							"$ref": "#/definitions/ScreeningDataTable"
+						}
+					}
+				],
+				"consumes": [
+					"application/json",
+					"text/json",
+					"application/*+json"
+				],
+				"produces": [
+					"text/plain",
+					"application/json",
+					"text/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Success",
+						"schema": {
+							"$ref": "#/definitions/ScreeningDataTable"
+						}
+					}
+				}
+			}
+		},
+		"/ScreeningDataTable/{id}": {
+			"get": {
+				"operationId": "get-screeningdatatable-id",
+				"summary": "/ScreeningDataTable/{id} - GET",
+				"tags": [
+					"ScreeningDataTable"
+				],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "Format - uuid.",
+						"required": true,
+						"type": "string"
+					}
+				],
+				"produces": [
+					"text/plain",
+					"application/json",
+					"text/json"
+				],
+				"responses": {
+					"200": {
+						"description": "Success",
+						"schema": {
+							"$ref": "#/definitions/ScreeningDataTable"
+						}
+					}
+				}
+			},
+			"put": {
+				"operationId": "put-screeningdatatable-id",
+				"summary": "/ScreeningDataTable/{id} - PUT",
+				"tags": [
+					"ScreeningDataTable"
+				],
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"description": "Format - uuid.",
+						"required": true,
+						"type": "string"
+					},
+					{
+						"name": "screeningDataTable",
+						"in": "body",
+						"schema": {
+							"$ref": "#/definitions/ScreeningDataTable"
+						}
+					}
+				],
+				"consumes": [
+					"application/json",
+					"text/json",
+					"application/*+json"
+				],
+				"responses": {
+					"200": {
+						"description": "Success"
+					}
+				}
+			}
+		}
+	},
+	"definitions": {
+		"PortsOfEntry": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"format": "uuid",
+					"type": "string"
+				},
+				"itemsLabels": {
+					"type": "string"
+				},
+				"itemsLongitudes": {
+					"format": "double",
+					"type": "number"
+				},
+				"itemsLatitudes": {
+					"format": "double",
+					"type": "number"
+				}
+			}
+		},
+		"RepresentativeData": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"format": "uuid",
+					"type": "string"
+				},
+				"repName": {
+					"type": "string"
+				},
+				"repContact": {
+					"type": "string"
+				},
+				"repLocation": {
+					"type": "string"
+				},
+				"repEmail": {
+					"type": "string"
+				}
+			}
+		},
+		"ScreeningDataTable": {
+			"type": "object",
+			"properties": {
+				"id": {
+					"format": "uuid",
+					"type": "string"
+				},
+				"visitorName": {
+					"type": "string"
+				},
+				"location": {
+					"type": "string"
+				},
+				"screeningRepName": {
+					"type": "string"
+				},
+				"passport": {
+					"type": "string"
+				},
+				"contactNumber": {
+					"type": "string"
+				},
+				"nationality": {
+					"type": "string"
+				},
+				"dateOfScreening": {
+					"format": "date-time",
+					"type": "string"
+				},
+				"fever": {
+					"type": "boolean"
+				},
+				"soreThroat": {
+					"type": "boolean"
+				},
+				"runnyNose": {
+					"type": "boolean"
+				},
+				"fatigue": {
+					"type": "boolean"
+				},
+				"headache": {
+					"type": "boolean"
+				},
+				"bodyache": {
+					"type": "boolean"
+				},
+				"shortnessOfBreath": {
+					"type": "boolean"
+				},
+				"dryCough": {
+					"type": "boolean"
+				},
+				"traveledOutsideTheUS": {
+					"type": "boolean"
+				},
+				"inContactWithCOVID": {
+					"type": "boolean"
+				}
+			}
+		},
+		"PortsOfEntryArray": {
+			"type": "array",
+			"items": {
+				"$ref": "#/definitions/PortsOfEntry"
+			}
+		},
+		"RepresentativeDataArray": {
+			"type": "array",
+			"items": {
+				"$ref": "#/definitions/RepresentativeData"
+			}
+		},
+		"ScreeningDataTableArray": {
+			"type": "array",
+			"items": {
+				"$ref": "#/definitions/ScreeningDataTable"
+			}
+		}
+	},
+	"tags": [],
+	"host": "covidscreening-app-apis.azure-api.net"
+}

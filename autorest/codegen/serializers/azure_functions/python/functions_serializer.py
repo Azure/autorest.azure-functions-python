@@ -4,14 +4,20 @@
 # license information.
 # --------------------------------------------------------------------------
 
-
 from jinja2 import Environment
 
 from autorest.codegen import CodeModel, OperationGroup
+from autorest.codegen.models import FileImport, ImportType
 from autorest.codegen.serializers.azure_functions.common import prettify_json
-from autorest.codegen.serializers.azure_functions.python.import_serializer import FileImportSerializer
-from autorest.codegen.serializers.azure_functions.python.trigger_serializer import InputTriggerSerializer
-from autorest.codegen.serializers.azure_functions.python.bindings_serializer import OutputBindingsSerializer
+from autorest.codegen.serializers.azure_functions.python.bindings_serializer \
+    import \
+    OutputBindingsSerializer
+from autorest.codegen.serializers.azure_functions.python.import_serializer \
+    import \
+    FileImportSerializer
+from autorest.codegen.serializers.azure_functions.python.trigger_serializer \
+    import \
+    InputTriggerSerializer
 
 
 class HttpFunctionsSerializer(object):
@@ -39,10 +45,7 @@ class HttpFunctionsSerializer(object):
             request_comment_description="Passing the request",
             return_comment_description="Request",
             magic_comment="### Do Magic Here! ###",
-            imports=FileImportSerializer(
-                self.operation_group.imports(self.async_mode, bool(self.code_model.schemas)),
-                is_python_3_file=self.async_mode
-            ),
+            imports=FileImportSerializer(self._get_imports()),
             success_status_code="200",
             failure_status_code="405"
         )
@@ -50,7 +53,20 @@ class HttpFunctionsSerializer(object):
     def serialize_functions_json_file(self, operation):
         template = self.env.get_template("functions.json.jinja2")
 
-        return prettify_json(template.render(script_filename=self.default_script_filename,
-                                             input_trigger=InputTriggerSerializer(operation, self.env),
-                                             output_bindings=[OutputBindingsSerializer(operation, self.env)],
-                                             is_disabled=False))
+        return prettify_json(
+            template.render(script_filename=self.default_script_filename,
+                            input_trigger=InputTriggerSerializer(operation,
+                                                                 self.env),
+                            output_bindings=[
+                                OutputBindingsSerializer(operation, self.env)],
+                            is_disabled=False))
+
+    @staticmethod
+    def _get_imports():
+        file_import = FileImport()
+        file_import.add_from_import("azure.functions", "HttpRequest",
+                                    ImportType.THIRDPARTY)
+        file_import.add_from_import("azure.functions", "HttpResponse",
+                                    ImportType.THIRDPARTY)
+        file_import.add_import("logging", ImportType.STDLIB)
+        return file_import

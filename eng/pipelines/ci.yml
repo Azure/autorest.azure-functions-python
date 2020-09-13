@@ -9,19 +9,19 @@ trigger:
   branches:
     include:
     - dev
-    - master
+    - main
     - release/*
 
 pr:
   branches:
     include:
     - dev
-    - master
+    - main
 
 variables:
-  NodeVersion: '12.x'
-  PythonVersion: '3.6'
   TestFolder: '$(Build.SourcesDirectory)/test/'
+  NodeVersion: '12.x'
+  pythonVersion: '3.8'
 
 schedules:
 - cron: "0 8 * * 1,2,3,4"
@@ -29,7 +29,7 @@ schedules:
   branches:
     include:
       - dev
-      - master
+      - main
       - release/*
     exclude:
     - releases/ancient/*
@@ -40,18 +40,12 @@ jobs:
 
     strategy:
       matrix:
-        Linux_Python36:
-          OSName: 'Linux'
-          OSVmImage: 'ubuntu-16.04'
-          PythonVersion: '3.6'
+        Python38:
+          pythonVersion: '$(pythonVersion)'
           CoverageArg: ''
-        Linux_Python38:
-          OSName: 'Linux'
-          OSVmImage: 'ubuntu-16.04'
-          PythonVersion: '3.8'
 
     pool:
-      vmImage: '$(OSVmImage)'
+      vmImage: 'ubuntu-18.04'
 
     steps:
       - task: NodeTool@0
@@ -60,72 +54,40 @@ jobs:
           versionSpec: '$(NodeVersion)'
 
       - task: UsePythonVersion@0
-        displayName: 'Use Python 3.6'
         inputs:
-          versionSpec: 3.6
+          versionSpec: '3.8'
+          addToPath: true
+
+      - task: DockerInstaller@0
+        displayName: Docker Installer
+        inputs:
+          dockerVersion: 17.09.0-ce
+          releaseType: stable
 
       - script: |
           cd $(Build.SourcesDirectory)
+          pip install --upgrade pip
           pip install -r dev_requirements.txt
-          npm install -g autorest
-          npm install
+          # npm install -g autorest
+          npm install -g bats
         displayName: 'Prepare Environment for Generation'
 
       - script: |
           pylint autorest
         displayName: 'Pylint'
+        continueOnError: true 
 
       - script: |
           mypy autorest
         displayName: 'Mypy'
+        continueOnError: true 
 
       - script: |
           pytest --instafail --cov=./autorest --cov-report xml --cov-branch test/unittests
         displayName: 'Unit tests'
+        continueOnError: true 
 
       - script: |
-          inv regenerate
-        displayName: 'Regenerate Code'
-
-      - script: |
-          git add -A  # 'add' first so 'diff' includes untracked files
-          git diff --staged -w
-        displayName: 'Diff regeneration'
-
-      - task: UsePythonVersion@0
-        displayName: 'Use Python $(PythonVersion)'
-        inputs:
-          versionSpec: $(PythonVersion)
-
-      - script: |
-          pip install tox coverage==4.5.4
-        displayName: 'Install Env Specific Reqs in Target PyVersion $(PythonVersion)'
-
-      - script: |
-          cd $(TestFolder)/azure
-          tox -e ci
-        displayName: 'Execute "azure" Tests - Python $(PythonVersion)'
-      - task: PublishTestResults@2
+          bats $(TestFolder)/integrationtests/tests/
+        displayName: 'Run integration tests using bats'
         condition: always()
-        displayName: 'Publish "azure" Test Results'
-        inputs:
-          testResultsFiles: 'test-junit-azure-ci.xml'
-          testRunTitle: '$(OSName) Python $(PythonVersion) - azure'
-          searchFolder: '$(TestFolder)/azure'
-
-      - script: |
-          cd $(TestFolder)/vanilla
-          tox -e ci
-        displayName: 'Execute "vanilla" Tests - Python $(PythonVersion)'
-      - task: PublishTestResults@2
-        displayName: 'Publish "vanilla" Test Results'
-        condition: always()
-        inputs:
-          testResultsFiles: 'test-junit-vanilla-ci.xml'
-          testRunTitle: '$(OSName) Python $(PythonVersion) - vanilla'
-          searchFolder: '$(TestFolder)/vanilla'
-
-      - script: |
-          npm run coverage-push -- $(Build.Repository.Name) $(Build.SourceBranch) $(github-token) $(storage-coverage-user) $(storage-coverage-pass)
-        workingDirectory: node_modules/@microsoft.azure/autorest.testserver
-        displayName: 'Publish coverage report to stroage account'
