@@ -1,7 +1,7 @@
 {
   "name": "@autorest/azure-functions-python",
-  "version": "0.1.0-preview",
-  "description": "The Azure Functions extension for code generators in AutoRest.",
+  "version": "0.2.0-preview",
+  "description": "The Azure Functions extension for python code generators in AutoRest.",
   "scripts": {
     "prepare": "node run-python3.js prepare.py",
     "start": "node run-python3.js start.py",
@@ -21,9 +21,9 @@
   "author": "Microsoft Corporation",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Azure/autorest.python/issues"
+    "url": "https://github.com/Azure/autorest.azure-functions/issues"
   },
-  "homepage": "https://github.com/Azure/autorest.python/blob/autorestv3/README.md",
+  "homepage": "https://github.com/Azure/autorest.azure-functions-python/",
   "dependencies": {
     "@azure-tools/extension": "^3.0.262"
   },

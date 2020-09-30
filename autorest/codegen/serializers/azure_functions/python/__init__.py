@@ -142,6 +142,12 @@ class AzureFunctionsPythonSerializer(AzureFunctionsSerializer):
                 azure_functions_serializer.serialize_local_settings_json_file()
         )
 
+        # Write the .autorest_generated.json file in the Azure Functions App folder
+        self.autorest_api.write_file(
+                function_app_path / Path(".autorest_generated.json"),
+                azure_functions_serializer.serialize_autorest_generated_json_file()
+        )
+
         # Write the .gitignore file in the Azure Functions App folder
         self.autorest_api.write_file(
                 function_app_path /
@@ -253,6 +259,10 @@ class AzureFunctionsPythonAppSerializer(object):
         return prettify_json(template.render(is_encrypted="false",
                                              azure_web_jobs_storage_secret='""',
                                              language_worker_runtime='"python"'))
+
+    def serialize_autorest_generated_json_file(self):
+        template = self.env.get_template("autorest_generated.json.jinja2")
+        return prettify_json(template.render(version='"0.2.0-preview"'))
 
     def serialize_proxies_json_file(self):
         template = self.env.get_template("proxies.json.jinja2")
